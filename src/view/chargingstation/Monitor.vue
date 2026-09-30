@@ -133,7 +133,7 @@ const formParams = reactive({
   input: "",
   value: "",
 });
-const tableData = ref([]);
+const tableData = ref<RuleForm[]>([]);
 const loadData = () => {
   loading.value = true;
   try {
@@ -163,7 +163,7 @@ const handleReset = () => {
   select.value = "name";
   loadData();
 };
-const handleDelete = (id) => {
+const handleDelete = (id: string | number) => {
   deleteApi({ id }).then((res) => {
     if (res.code == 200) {
       ElMessage({

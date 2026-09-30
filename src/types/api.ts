@@ -3,3 +3,13 @@ export interface ApiResponse<T = unknown> {
   message: string;
   data: T;
 }
+
+export interface PageResult<T> {
+  list: T[];
+  total: number;
+}
+
+export interface ChartItem {
+  name: string;
+  data: number[];
+}

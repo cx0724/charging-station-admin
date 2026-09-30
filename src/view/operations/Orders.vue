@@ -84,7 +84,7 @@
 import { reactive, ref } from "vue";
 import CommonTable from "@/components/commonTable/index.vue";
 import CommonPagination from "@/components/commonPagination/index.vue";
-import { orderList, del, deleteBatch } from "@/api/modules/orders";
+import { orderList, del, deleteBatch, type OrderItem } from "@/api/modules/orders";
 import { formatTime } from "@/hooks/useDate";
 import { ElMessage } from "element-plus";
 import * as XLSX from "xlsx";
@@ -122,7 +122,7 @@ const optionList = reactive([
     value: 4,
   },
 ]);
-const tableList = ref([]);
+const tableList = ref<OrderItem[]>([]);
 const handleReset = () => {
   serchFrom.value = { ...searchParams };
 };
@@ -174,7 +174,7 @@ const loadData = () => {
     if (res.code === 200) {
       loading.value = false;
       const { list, total } = res.data;
-      tableList.value = list.map((item: any) => {
+      tableList.value = list.map((item) => {
         return {
           ...item,
           date: formatTime(item.date),
@@ -185,7 +185,7 @@ const loadData = () => {
   });
 };
 loadData();
-const handleDelete = (row) => {
+const handleDelete = (row: OrderItem) => {
   del({
     order_no: row.order_no,
   }).then((res) => {
@@ -212,8 +212,8 @@ const batchDelete = () => {
     }
   });
 };
-const select = ref<any>([]);
-const handleSelectionChange = (data: any[]) => {
+const select = ref<string[]>([]);
+const handleSelectionChange = (data: OrderItem[]) => {
   select.value = data.map((item) => item.order_no);
 };
 const exportData = () => {

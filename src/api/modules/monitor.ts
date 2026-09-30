@@ -1,6 +1,6 @@
 import request from "../request";
 import type { RuleForm } from "@/types/monitor.ts";
-import type { ApiResponse } from "@/types/api";
+import type { ApiResponse, PageResult } from "@/types/api";
 interface ListType {
   page: number;
   pageSize: number;
@@ -11,7 +11,7 @@ interface ListType {
 
 // 分页查询充电站列表接口
 export function stationList(data: ListType) {
-  return request.post<ApiResponse>("/charging/stationList", data);
+  return request.post<ApiResponse<PageResult<RuleForm>>>("/charging/stationList", data);
 }
 // 编辑充电站接口
 export function editApi(data: RuleForm) {
@@ -22,6 +22,6 @@ export function addApi(data: RuleForm) {
   return request.post<ApiResponse>("/charging/add", data);
 }
 // 根据充电站id删除充电站接口
-export function deleteApi(data: { id: number }) {
+export function deleteApi(data: { id: string | number }) {
   return request.post<ApiResponse>("/charging/delete", data);
 }

@@ -62,11 +62,16 @@
 <script setup lang="ts" name="index">
 import { useEcharts } from "@/hooks/useEcharts";
 import { ref, reactive } from "vue";
-import { chartApi, revenueTableList } from "@/api/modules/revenue";
+import { chartApi, revenueTableList, type RevenueRecord } from "@/api/modules/revenue";
 import CommonTable from "@/components/commonTable/index.vue";
 import CommonPagination from "@/components/commonPagination/index.vue";
 const chartRef = ref<HTMLElement | null>(null);
-const tableData = ref([]);
+type RevenueRow = RevenueRecord & { day: number };
+interface PageInfo {
+  page: number;
+  pageSize: number;
+}
+const tableData = ref<RevenueRow[]>([]);
 
 const column = ref([
   {
@@ -110,10 +115,10 @@ const column = ref([
     prop: "member",
   },
 ]);
-const loading = ref(true);
-const name = ref("");
+const loading = ref<boolean>(true);
+const name = ref<string>("");
 // 分页选择器
-const pageInfo = reactive({
+const pageInfo = reactive<PageInfo>({
   page: 1,
   pageSize: 10,
 });
@@ -154,7 +159,7 @@ const setChartData = async () => {
       {
         name: "",
         type: "bar",
-        data: [],
+        data: [] as number[],
         yAxisIndex: 0,
         itemStyle: {
           color: "#409eff",
@@ -163,7 +168,7 @@ const setChartData = async () => {
       {
         name: "",
         type: "line",
-        data: [],
+        data: [] as number[],
         yAxisIndex: 1,
         itemStyle: {
           color: "#409eff",
@@ -187,14 +192,13 @@ const loadData = () => {
       ...pageInfo,
       name: name.value,
     }).then((res) => {
-      console.log(res);
       if (res.code === 200) {
         loading.value = false;
         const {
           data: { list, total },
         } = res;
         totals.value = total;
-        tableData.value = list.map((item: any) => ({
+        tableData.value = list.map((item) => ({
           ...item,
           day:
             Number(item.electricity) +

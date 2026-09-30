@@ -8,12 +8,12 @@ const whiteList = ["home", "login", "notFound"];
 
 const componentMap: Record<string, string> = {
   "/dashboard": "dashboard/Index",
-  "/chargingstation": "chargingstation/Monitor",
+  // "/chargingstation": "chargingstation/Monitor",
   "/chargingstation/monitor": "chargingstation/Monitor",
   "/chargingstation/revenue": "chargingstation/Revenue",
   "/chargingstation/fault": "chargingstation/Fault",
   "/map": "map/Index",
-  "/operations": "operations/Orders",
+  // "/operations": "operations/Orders",
   "/operations/orders": "operations/Orders",
   // "/system": "system/Index",
 };
@@ -87,21 +87,30 @@ export const useUserStore = defineStore("user", {
       localStorage.setItem("userName", data.user.username);
     },
 
-    addRouteToRouter(data: MenuItem[], name: string) {
-      data.map((item: MenuItem) => {
-        router.addRoute(name, {
-          path: item.url,
-          name: routePath(item.url),
-          component: viteComponent[`../view/${componentMap[item.url]}.vue`],
-          meta: item.meta,
-        });
+    addRouteToRouter(data: MenuItem[], parentName: string) {
+      data.forEach((item) => {
+        const componentPath = componentMap[item.url];
+        const routeName = routePath(item.url);
 
-        if (item?.children) {
-          this.addRouteToRouter(item?.children, routePath(item.url));
+        // 仅给真正有页面组件的菜单注册路由
+        if (componentPath) {
+          router.addRoute(parentName, {
+            path: item.url,
+            name: routeName,
+            component: viteComponent[`../view/${componentPath}.vue`],
+            meta: item.meta,
+          });
+        }
+
+        // 父级菜单没有页面组件时，子菜单沿用当前父路由
+        if (item.children?.length) {
+          this.addRouteToRouter(
+            item.children,
+            componentPath ? routeName : parentName,
+          );
         }
       });
     },
-
     clearUserInfo() {
       const removeRoutes = (items: MenuItem[]) =>
         items.forEach((item: MenuItem) => {

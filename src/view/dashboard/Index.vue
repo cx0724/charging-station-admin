@@ -248,7 +248,7 @@ const setChartData2 = async () => {
     },
     legend: {
       top: 10,
-      data: res.data.list.map((item: any) => item.name),
+      data: res.data.list.map((item) => item.name),
       textStyle: {
         color: "#333",
       },
@@ -279,7 +279,7 @@ const setChartData2 = async () => {
       {
         name: "",
         type: "line",
-        data: [],
+        data: [] as number[],
         itemStyle: {
           color: "purple",
           shadowColor: "rgba(0, 255, 0, 0.3)",
@@ -293,7 +293,7 @@ const setChartData2 = async () => {
       {
         name: "",
         type: "line",
-        data: [],
+        data: [] as number[],
         itemStyle: {
           color: "lightgreen",
           shadowColor: "rgba(0, 255, 0, 0.3)",
@@ -307,7 +307,7 @@ const setChartData2 = async () => {
       {
         name: "",
         type: "line",
-        data: [],
+        data: [] as number[],
         itemStyle: {
           color: "skyblue",
           shadowColor: "rgba(0, 255, 0, 0.3)",

@@ -10,10 +10,10 @@
 import { onMounted, onUnmounted, ref, createApp } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import icon from "@/assets/flashIcon.png";
-import { mapList } from "@/api/modules/map";
+import { mapList, type MapMarker } from "@/api/modules/map";
 import MapInfoWindow from "./components/MapInfoWindow.vue";
 import station from "@/assets/station.jpg";
-const markersData = ref([]);
+const markersData = ref<MapMarker[]>([]);
 let map: any = null;
 
 onMounted(() => {
@@ -36,7 +36,7 @@ onMounted(() => {
           const infoWindow = new AMap.InfoWindow({
             offset: new AMap.Pixel(0, -30),
           });
-          markersData.value.forEach((markerData: any) => {
+          markersData.value.forEach((markerData) => {
             const marker = new AMap.Marker({
               position: markerData.position,
               icon,

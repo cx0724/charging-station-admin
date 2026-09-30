@@ -39,7 +39,7 @@ import { useRouter } from "vue-router";
 import Breadcrumb from "@/components/breadcrumb/index.vue";
 const userStore = useUserStore();
 const router = useRouter();
-const handleCommand = (command: string | number | object) => {
+const handleCommand = (_command: string | number | object) => {
   userStore.clearUserInfo();
   router.push("/login");
 };
