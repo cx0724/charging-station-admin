@@ -79,7 +79,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     });
     if (res.code == 200) {
       userStore.setUserInfo(res.data);
-      userStore.addRouteToRouter(res.data.menulist, "home");
+      // 使用 setUserInfo 处理后的菜单，确保动态路由带有 meta.title，面包屑可立即显示。
+      userStore.addRouteToRouter(userStore.menulist, "home");
       userStore.isRouteAdd = true;
       router.push("/dashboard");
       ElNotification({
