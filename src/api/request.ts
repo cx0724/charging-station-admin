@@ -31,6 +31,9 @@ const userStore = useUserStore();
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers.Authorization = `Bearer ${userStore.token}`;
+    config.headers["X-Order-No"] = "2026090923001461941415054538";
+    config.headers["X-Phone"] = "17356475185";
+    config.headers["X-Name"] = "shiqi";
     return config;
   },
   (error: AxiosError) => {
