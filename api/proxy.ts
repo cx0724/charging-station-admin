@@ -3,7 +3,6 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 type VercelRequest = IncomingMessage & {
   body?: unknown;
   query?: Record<string, string | string[] | undefined>;
-  url?: string;
 };
 
 type VercelResponse = ServerResponse & {
@@ -22,20 +21,20 @@ export default async function handler(
   response: VercelResponse,
 ) {
   const backendUrl = process.env.API_BACKEND_URL;
+  const requestedPath = request.query?.path;
+  const apiPath = Array.isArray(requestedPath)
+    ? requestedPath.join("/")
+    : requestedPath;
 
-  if (!backendUrl) {
-    response.status(500).send("API_BACKEND_URL is not configured");
+  if (!backendUrl || !apiPath) {
+    response.status(500).send("API proxy is not configured");
     return;
   }
 
-  const requestUrl = new URL(request.url || "/", "https://localhost");
-  const apiPath = requestUrl.pathname.replace(/^\/api\/?/, "");
   const upstreamUrl = new URL(
     apiPath,
     backendUrl.endsWith("/") ? backendUrl : `${backendUrl}/`,
   );
-  upstreamUrl.search = requestUrl.search;
-
   const headers: Record<string, string> = {
     "Content-Type": String(request.headers["content-type"] || "application/json"),
   };
