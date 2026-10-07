@@ -6,6 +6,9 @@
       "dest": "/api/proxy?path=$1"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
