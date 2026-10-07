@@ -26,13 +26,18 @@
     </el-card>
     <el-card class="mt list">
       <div class="mb">
-        <el-button
-          type="danger"
-          icon="Delete"
-          :disabled="!select.length"
-          @click="batchDelete"
-          >批量删除</el-button
+        <el-popconfirm
+          title="确定要删除当前站点吗？"
+          width="200"
+          placement="top"
+          @confirm="batchDelete"
         >
+          <template #reference>
+            <el-button type="danger" icon="Delete" :disabled="!select.length"
+              >批量删除</el-button
+            >
+          </template>
+        </el-popconfirm>
         <el-button
           type="primary"
           icon="Download"
@@ -84,7 +89,12 @@
 import { reactive, ref } from "vue";
 import CommonTable from "@/components/commonTable/index.vue";
 import CommonPagination from "@/components/commonPagination/index.vue";
-import { orderList, del, deleteBatch, type OrderItem } from "@/api/modules/orders";
+import {
+  orderList,
+  del,
+  deleteBatch,
+  type OrderItem,
+} from "@/api/modules/orders";
 import { formatTime } from "@/hooks/useDate";
 import { ElMessage } from "element-plus";
 import * as XLSX from "xlsx";
@@ -219,7 +229,7 @@ const handleSelectionChange = (data: OrderItem[]) => {
 const exportData = () => {
   const exportData = tableList.value.map((item) => ({
     订单号: item.order_no,
-    设备编号: item.order_no,
+    设备编号: item.equipment_no,
     订单日期: item.date,
     状态:
       item.status === 2
