@@ -16,7 +16,9 @@ interface ApiResponse {
 
 // 创建axios实例
 const service: AxiosInstance = axios.create({
-  baseURL: import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_BASE_URL,
+  // 开发环境由 Vite 代理；生产环境通过部署平台的 /api 反向代理访问后端，
+  // 以避免浏览器跨域和 HTTPS 页面请求 HTTP 接口的混合内容问题。
+  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
   timeout: 10000, // 请求超时时间 10秒
   headers: {
     "Content-Type": "application/json;charset=utf-8",
@@ -29,9 +31,6 @@ const userStore = useUserStore();
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers.Authorization = `Bearer ${userStore.token}`;
-    config.headers["X-Order-No"] = "2026090923001461941415054538";
-    config.headers["X-Phone"] = "17356475185";
-    config.headers["X-Name"] = "shiqi";
     return config;
   },
   (error: AxiosError) => {
